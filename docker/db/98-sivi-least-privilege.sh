@@ -4,8 +4,14 @@ set -Eeuo pipefail
 umask 077
 
 read_secret() {
-  local variable="$1" file="$2" value="${!variable:-}"
-  if [[ -z "$value" && -n "$file" && -r "$file" ]]; then value="$(tr -d '\r\n' < "$file")"; fi
+  local variable="$1"
+  local file="$2"
+  local value="${!variable-}"
+
+  if [[ -z "$value" && -n "$file" && -r "$file" ]]; then
+    value="$(tr -d '\r\n' < "$file")"
+  fi
+
   printf '%s' "$value"
 }
 
@@ -27,6 +33,7 @@ BACKUP_PASSWORD_SQL="$(sql_string "$BACKUP_PASSWORD")"
 CLIENT_CNF="$(mktemp)"
 trap 'rm -f "$CLIENT_CNF"' EXIT INT TERM
 printf '[client]\nuser=root\npassword=%s\nprotocol=socket\n' "$ROOT_PASSWORD" > "$CLIENT_CNF"
+chmod 600 "$CLIENT_CNF"
 
 mysql --defaults-extra-file="$CLIENT_CNF" <<SQL
 REVOKE ALL PRIVILEGES, GRANT OPTION FROM '${APP_USER}'@'%';
