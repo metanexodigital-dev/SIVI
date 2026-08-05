@@ -1,0 +1,78 @@
+# DOCUMENTACIÓN TÉCNICA EN ESPAÑOL
+# Archivo: .github/workflows/sivi-ci.yml
+# Propósito: Define la validación automática del repositorio y del paquete antes de su publicación.
+name: SIVI Quality Gate
+
+on:
+  push:
+    branches: [main, develop, pruebas]
+  pull_request:
+    branches: [main, develop, pruebas]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sivi-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Preparar PHP 8.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: pdo_mysql, mbstring, zip, xmlreader, simplexml, gd, openssl, curl
+          coverage: none
+
+      - name: Validar repositorio
+        run: sh scripts/check_repository_integrity.sh .
+
+      - name: Preparar archivos CI para Docker Compose
+        run: |
+          mkdir -p .ci-secrets .ci-pki
+          for name in app_setup_key app_encryption_key db_password db_backup_password backup_encryption_key mysql_root_password; do
+            printf 'ci-only-%s\n' "$name" > ".ci-secrets/$name"
+          done
+          printf 'ci-ca\n' > .ci-pki/ca.pem
+          printf 'ci-cert\n' > .ci-pki/db.crt
+          printf 'ci-key\n' > .ci-pki/db.key
+
+      - name: Validar Docker Compose APP
+        run: docker compose -f docker-compose.yml config >/dev/null
+        env:
+          APP_SETUP_KEY_SECRET_FILE: .ci-secrets/app_setup_key
+          APP_ENCRYPTION_KEY_SECRET_FILE: .ci-secrets/app_encryption_key
+          DB_PASSWORD_SECRET_FILE: .ci-secrets/db_password
+          DB_BACKUP_PASSWORD_SECRET_FILE: .ci-secrets/db_backup_password
+          BACKUP_ENCRYPTION_KEY_SECRET_FILE: .ci-secrets/backup_encryption_key
+          DB_TLS_CA_HOST_PATH: .ci-pki/ca.pem
+          APP_SERVER_HOSTNAME: ci-app
+          DB_SERVER_HOSTNAME: ci-db
+          APP_INTERNAL_DNS: ci.example.invalid
+          APP_URL: https://ci.example.invalid
+          DB_HOST: 127.0.0.1
+
+      - name: Validar Docker Compose DB
+        run: docker compose -f docker-compose-db.yml config >/dev/null
+        env:
+          DB_LISTEN_IP: 127.0.0.1
+          APP_SERVER_HOSTNAME: ci-app
+          DB_SERVER_HOSTNAME: ci-db
+          DB_PASSWORD_SECRET_FILE: .ci-secrets/db_password
+          DB_BACKUP_PASSWORD_SECRET_FILE: .ci-secrets/db_backup_password
+          MYSQL_ROOT_PASSWORD_SECRET_FILE: .ci-secrets/mysql_root_password
+          DB_TLS_CA_HOST_PATH: .ci-pki/ca.pem
+          DB_TLS_SERVER_CERT_HOST_PATH: .ci-pki/db.crt
+          DB_TLS_SERVER_KEY_HOST_PATH: .ci-pki/db.key
+
+      - name: Construir imagen
+        run: docker build --pull --tag sivi:${{ github.sha }} .

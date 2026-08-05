@@ -1,0 +1,86 @@
+# SIVI 1.0.0.0 - Servidor DB independiente - MySQL 8.4 LTS
+services:
+  db:
+    container_name: ${DB_CONTAINER_NAME:-sivi-produccion-db}
+    image: sivi-mysql84:${APP_VERSION:-1.0.0.0}
+    build:
+      context: .
+      dockerfile: docker/db/Dockerfile
+    restart: unless-stopped
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --bind-address=0.0.0.0
+      - --skip-name-resolve
+      - --local-infile=OFF
+      - --require-secure-transport=ON
+      - --tls-version=TLSv1.2,TLSv1.3
+      - --ssl-ca=/etc/mysql/sivi-tls/ca.pem
+      - --ssl-cert=/etc/mysql/sivi-tls/server-cert.pem
+      - --ssl-key=/etc/mysql/sivi-tls/server-key.pem
+      - --max-connections=${DB_MAX_CONNECTIONS:-200}
+      - --innodb-buffer-pool-size=${DB_INNODB_BUFFER_POOL_SIZE:-3G}
+    environment:
+      DEPLOYMENT_TOPOLOGY: ${DEPLOYMENT_TOPOLOGY:-split}
+      DB_SERVER_HOSTNAME: ${DB_SERVER_HOSTNAME:?Configure DB_SERVER_HOSTNAME}
+      APP_SERVER_HOSTNAME: ${APP_SERVER_HOSTNAME:?Configure APP_SERVER_HOSTNAME}
+      MYSQL_DATABASE: ${DB_DATABASE:-sivi_produccion}
+      MYSQL_USER: ${DB_USERNAME:-sivi_user}
+      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      SIVI_BACKUP_USER: ${DB_BACKUP_USERNAME:-sivi_backup}
+      SIVI_BACKUP_PASSWORD_FILE: /run/secrets/db_backup_password
+      APP_VERSION: ${APP_VERSION:-1.0.0.0}
+      APP_ENV: ${APP_ENV:-production}
+      APP_BUILD_ID: ${APP_BUILD_ID:-SIVI-1.0.0.0}
+      APP_GIT_COMMIT: ${APP_GIT_COMMIT:-}
+      TZ: ${APP_TIMEZONE:-America/Bogota}
+    ports:
+      - "${DB_LISTEN_IP:?Configure DB_LISTEN_IP}:${DB_PORT:-3306}:3306"
+    secrets:
+      - db_password
+      - db_backup_password
+      - mysql_root_password
+      - source: db_ca
+        target: db_ca.pem
+      - source: db_server_cert
+        target: db_server_cert.pem
+      - source: db_server_key
+        target: db_server_key.pem
+    volumes:
+      - db_data:/var/lib/mysql
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=512m
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 512
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "5"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - 'CNF=$$(mktemp); chmod 600 $$CNF; printf "[client]\nuser=root\npassword=%s\nprotocol=socket\n" "$$(cat /run/secrets/mysql_root_password)" > $$CNF; mysqladmin --defaults-extra-file=$$CNF ping --silent; rc=$$?; rm -f $$CNF; exit $$rc'
+      interval: 10s
+      timeout: 10s
+      retries: 30
+      start_period: 90s
+
+secrets:
+  db_password:
+    file: ${DB_PASSWORD_SECRET_FILE:?Configure DB_PASSWORD_SECRET_FILE}
+  db_backup_password:
+    file: ${DB_BACKUP_PASSWORD_SECRET_FILE:?Configure DB_BACKUP_PASSWORD_SECRET_FILE}
+  mysql_root_password:
+    file: ${MYSQL_ROOT_PASSWORD_SECRET_FILE:?Configure MYSQL_ROOT_PASSWORD_SECRET_FILE}
+  db_ca:
+    file: ${DB_TLS_CA_HOST_PATH:?Configure DB_TLS_CA_HOST_PATH}
+  db_server_cert:
+    file: ${DB_TLS_SERVER_CERT_HOST_PATH:?Configure DB_TLS_SERVER_CERT_HOST_PATH}
+  db_server_key:
+    file: ${DB_TLS_SERVER_KEY_HOST_PATH:?Configure DB_TLS_SERVER_KEY_HOST_PATH}
+
+volumes:
+  db_data:

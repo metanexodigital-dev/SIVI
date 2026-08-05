@@ -1,0 +1,33 @@
+# DOCUMENTACIÓN TÉCNICA EN ESPAÑOL
+# Archivo: docker-compose.secure-fragment.yml
+# Propósito: Referencia de hardening. El Compose oficial es docker-compose.yml.
+# No usar como Compose independiente.
+services:
+  app:
+    environment:
+      APP_SETUP_KEY_FILE: /run/secrets/app_setup_key
+      APP_ENCRYPTION_KEY_FILE: /run/secrets/app_encryption_key
+      DB_PASSWORD_FILE: /run/secrets/db_password
+      DB_TLS_MODE: verify_ca
+      DB_TLS_CA: /run/secrets/db_ca.pem
+      MALWARE_SCAN_REQUIRED: "true"
+      AUTO_MIGRATE: "false"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+  backup:
+    environment:
+      DB_HOST: ${DB_HOST:?Configure DB_HOST}
+      DB_USERNAME: ${DB_BACKUP_USERNAME:-sivi_backup}
+      DB_PASSWORD_FILE: /run/secrets/db_backup_password
+      DB_TLS_MODE: verify_ca
+      DB_TLS_CA: /run/secrets/db_ca.pem
+      BACKUP_ENCRYPTION_ENABLED: "true"
+      BACKUP_ENCRYPTION_KEY_FILE: /run/secrets/backup_encryption_key
+      BACKUP_PBKDF2_ITERATIONS: ${BACKUP_PBKDF2_ITERATIONS:-600000}
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL

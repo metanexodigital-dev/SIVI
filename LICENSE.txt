@@ -1,0 +1,2 @@
+Software desarrollado como base de proyecto para uso interno del usuario solicitante.
+Antes de su puesta en producción deben definirse formalmente la titularidad, el licenciamiento, la política de tratamiento de datos y las responsabilidades de administración.

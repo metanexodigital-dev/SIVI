@@ -1,0 +1,34 @@
+# DOCUMENTACIÓN TÉCNICA EN ESPAÑOL
+# Archivo: .dockerignore
+# Propósito: Impide incorporar datos runtime, claves o certificados a imágenes.
+.env
+.env.*
+!.env.example
+.git
+.github
+.gitignore
+secrets/
+.secret/
+.secrets/
+.ci-secrets/
+.ci-pki/
+pki/
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.csr
+*.srl
+id_rsa
+id_ed25519
+storage/uploads/*
+storage/logs/*
+storage/import-previews/*
+storage/backups/*
+!storage/uploads/.gitkeep
+!storage/logs/.gitkeep
+deployment-backups/
+backups/
+zap-work/
+sbom-*.json

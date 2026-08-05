@@ -1,0 +1,18 @@
+SIVI 1.0.0.0 - PAQUETE SERVIDOR APP / DOKPLOY
+==================================================
+Servidor objetivo: vps3486536 / 69.10.35.41
+DB remota: 69.169.109.197 / MySQL 8.4.10 / TLS
+Dominio de prueba: https://metanexo.digital
+
+1. Suba este paquete completo al repositorio GitHub de SIVI.
+2. En el servidor APP copie desde DB: db_password, db_backup_password y ca.pem a /root/sivi-db-integration.
+3. Ejecute: bash scripts/prepare_app_server.sh /root/sivi-db-integration
+4. En Dokploy use docker-compose.yml (NO docker-compose-db.yml).
+5. Pegue SIVI-APP-ENVIRONMENT-PRUEBAS.txt en Environment Settings y reemplace APP_GIT_COMMIT por git rev-parse HEAD.
+6. Configure dominio metanexo.digital -> servicio app -> puerto 80 -> HTTPS.
+7. Antes del Deploy pruebe desde el host: nc -vz 69.169.109.197 3306
+8. Deploy. La APP usa DB_HOST=69.169.109.197 y DB_TLS_MODE=verify_ca.
+9. Valide /health.php y /ready.php.
+10. Ejecute dentro del contenedor APP: bash scripts/validate_app_db_integration.sh o los checks indicados en Actualizaciones.md.
+
+El servidor APP no contiene MySQL. El servidor DB no contiene Apache/PHP SIVI.

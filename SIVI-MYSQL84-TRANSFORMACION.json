@@ -1,0 +1,9 @@
+{
+  "schema_transform": {
+    "columns": 101,
+    "alter_indexes": 21,
+    "create_indexes": 7,
+    "drop_indexes": 1
+  },
+  "unsupported_mysql84_patterns": []
+}

@@ -1,0 +1,26 @@
+SIVI 1.0.0.0 - REPOSITORIO ÚNICO RECOMENDADO
+
+Este repositorio sirve para ambos servidores.
+
+SERVIDOR APP / DOKPLOY
+- Repository: SIVI_PROD
+- Compose Path: ./docker-compose.yml
+- Environment: SIVI-APP-ENVIRONMENT-PRUEBAS.txt
+
+SERVIDOR DB
+- Repository: el mismo SIVI_PROD si desea clonarlo desde Git
+- Compose Path: ./docker-compose-db.yml
+- Environment: SIVI-DB-MYSQL84-ENVIRONMENT-PRUEBAS.txt
+
+No subir:
+- .env
+- secretos
+- contraseñas
+- ca.key
+- db-server.key
+- volúmenes de datos
+
+Después de publicar:
+git rev-parse HEAD
+
+Ese hash real debe usarse en APP_GIT_COMMIT.

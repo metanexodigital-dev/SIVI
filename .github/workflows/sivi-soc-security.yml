@@ -1,0 +1,100 @@
+# DOCUMENTACIÓN TÉCNICA EN ESPAÑOL
+# Archivo: .github/workflows/sivi-soc-security.yml
+# Propósito: Puerta de seguridad SOC para código, secretos, dependencias e imágenes.
+name: SIVI SOC Security Gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  security-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: PHP syntax and SIVI security checks
+        run: |
+          find . -type f -name '*.php' -not -path './storage/*' -print0 | xargs -0 -n1 php -l
+          php scripts/check_soc_hardening_1_0_0_0.php
+          php scripts/build/run.php --json
+
+      - name: Semgrep SAST
+        run: |
+          python3 -m pip install --disable-pip-version-check 'semgrep==1.170.0'
+          semgrep scan --config p/php --config p/owasp-top-ten --error --metrics=off .
+
+      - name: Trivy filesystem vulnerability, misconfiguration and secret scan
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln,misconfig,secret
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '1'
+
+      - name: Build application image
+        run: docker build --pull -t sivi-app:${{ github.sha }} .
+
+      - name: Build backup image
+        run: docker build --pull -f docker/backup/Dockerfile -t sivi-backup:${{ github.sha }} .
+
+      - name: Build database image
+        run: docker build --pull -f docker/db/Dockerfile -t sivi-db:${{ github.sha }} .
+
+      - name: Trivy application image
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          image-ref: sivi-app:${{ github.sha }}
+          scanners: vuln,misconfig,secret
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '1'
+
+      - name: Trivy backup image
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          image-ref: sivi-backup:${{ github.sha }}
+          scanners: vuln,misconfig,secret
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '1'
+
+      - name: Trivy database image
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          image-ref: sivi-db:${{ github.sha }}
+          scanners: vuln,misconfig,secret
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '1'
+
+      - name: Generate CycloneDX SBOMs
+        run: |
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+            -v "$PWD:/work" aquasec/trivy:0.69.3 image \
+            --format cyclonedx --output /work/sbom-sivi-app.cdx.json sivi-app:${{ github.sha }}
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+            -v "$PWD:/work" aquasec/trivy:0.69.3 image \
+            --format cyclonedx --output /work/sbom-sivi-backup.cdx.json sivi-backup:${{ github.sha }}
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+            -v "$PWD:/work" aquasec/trivy:0.69.3 image \
+            --format cyclonedx --output /work/sbom-sivi-db.cdx.json sivi-db:${{ github.sha }}
+
+      - name: Upload SBOM evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: sivi-1.0.0.0-sbom
+          path: sbom-*.cdx.json
+          retention-days: 90

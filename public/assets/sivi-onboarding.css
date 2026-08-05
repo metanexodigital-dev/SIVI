@@ -1,0 +1,74 @@
+/*
+ * DOCUMENTACIÓN TÉCNICA EN ESPAÑOL
+ * Archivo: public/assets/sivi-onboarding.css
+ * Propósito: Define la presentación del recorrido guiado y sus componentes visuales.
+ */
+/* SIVI 0.0.0.49 - Recorrido guiado del primer inicio */
+.sivi-tour-lock { overflow: hidden !important; }
+.sivi-tour-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483000;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background: rgba(16, 24, 40, .70);
+    backdrop-filter: blur(2px);
+}
+.sivi-tour-dialog {
+    width: min(680px, 100%);
+    max-height: min(760px, calc(100vh - 40px));
+    overflow: auto;
+    background: #fff;
+    color: #1f2937;
+    border-radius: 16px;
+    box-shadow: 0 24px 70px rgba(0,0,0,.35);
+    border: 1px solid #d8e0e8;
+}
+.sivi-tour-header { padding: 22px 24px 12px; border-bottom: 1px solid #e5eaf0; }
+.sivi-tour-kicker { margin:0 0 5px; color:#0b57d0; font-size:.82rem; font-weight:850; letter-spacing:.04em; text-transform:uppercase; }
+.sivi-tour-title { margin:0; font-size:clamp(1.35rem, 3vw, 1.8rem); line-height:1.2; }
+.sivi-tour-body { padding: 22px 24px; line-height:1.6; }
+.sivi-tour-body p { margin-top:0; }
+.sivi-tour-list { margin: 14px 0 0; padding-left: 22px; }
+.sivi-tour-list li { margin: 8px 0; }
+.sivi-tour-flow { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:18px; }
+.sivi-tour-flow span { padding:10px 8px; background:#f1f6fd; border:1px solid #bad2f0; border-radius:9px; text-align:center; font-size:.88rem; font-weight:750; }
+.sivi-tour-footer { display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:16px 24px 22px; border-top:1px solid #e5eaf0; }
+.sivi-tour-progress { flex:1 1 180px; height:8px; border-radius:999px; background:#e8edf3; overflow:hidden; }
+.sivi-tour-progress > span { display:block; height:100%; background:#0b57d0; transition:width .2s ease; }
+.sivi-tour-counter { color:#52606d; font-size:.9rem; white-space:nowrap; }
+.sivi-tour-actions { display:flex; gap:8px; margin-left:auto; flex-wrap:wrap; }
+.sivi-tour-button { border:1px solid transparent; border-radius:8px; padding:9px 13px; font:inherit; font-weight:750; cursor:pointer; }
+.sivi-tour-button-primary { background:#0b57d0; color:#fff; }
+.sivi-tour-button-primary:hover,.sivi-tour-button-primary:focus-visible { background:#073b91; outline:3px solid rgba(11,87,208,.24); outline-offset:2px; }
+.sivi-tour-button-secondary { background:#eef2f6; color:#24313d; border-color:#cbd5df; }
+.sivi-tour-button-link { background:transparent; color:#44576a; padding-left:2px; padding-right:2px; }
+.sivi-tour-launcher {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 2147482000;
+    border: 1px solid #0b57d0;
+    background: #fff;
+    color: #073b91;
+    border-radius: 999px;
+    padding: 8px 12px;
+    font: inherit;
+    font-size: .9rem;
+    font-weight: 800;
+    box-shadow: 0 5px 18px rgba(0,0,0,.16);
+    cursor: pointer;
+}
+.sivi-tour-launcher:hover,.sivi-tour-launcher:focus-visible { background:#edf4ff; outline:3px solid rgba(11,87,208,.22); }
+.sivi-tour-target { outline: 4px solid #ffbf47 !important; outline-offset: 4px !important; border-radius: 6px; position:relative; z-index:2147482500 !important; }
+@media (max-width: 700px) {
+    .sivi-tour-overlay { padding:10px; align-items:end; }
+    .sivi-tour-dialog { max-height:calc(100vh - 20px); border-radius:15px 15px 0 0; }
+    .sivi-tour-flow { grid-template-columns:1fr 1fr; }
+    .sivi-tour-actions { width:100%; margin-left:0; }
+    .sivi-tour-button { flex:1; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .sivi-tour-progress > span { transition:none; }
+}

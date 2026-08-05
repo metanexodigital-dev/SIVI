@@ -1,0 +1,44 @@
+# DOCUMENTACIÓN TÉCNICA EN ESPAÑOL
+# Archivo: .github/workflows/sivi-dast.yml
+# Propósito: DAST pasivo controlado con OWASP ZAP Baseline.
+name: SIVI DAST Baseline
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: URL autorizada de SIVI para análisis pasivo
+        required: true
+permissions:
+  contents: read
+
+jobs:
+  zap-baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Validar HTTPS
+        shell: bash
+        run: |
+          case '${{ inputs.target_url }}' in
+            https://*) ;;
+            *) echo 'El objetivo DAST debe usar HTTPS.' >&2; exit 1 ;;
+          esac
+
+      - name: Ejecutar OWASP ZAP Baseline
+        run: |
+          mkdir -p zap-work
+          chmod 777 zap-work
+          docker run --rm \
+            -v "$PWD/zap-work:/zap/wrk:rw" \
+            ghcr.io/zaproxy/zaproxy:stable \
+            zap-baseline.py -t '${{ inputs.target_url }}' \
+            -m 3 -J zap-report.json -r zap-report.html
+
+      - name: Publicar evidencia ZAP
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sivi-zap-baseline
+          path: zap-work/zap-report.*
+          retention-days: 90

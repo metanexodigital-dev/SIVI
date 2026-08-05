@@ -1,0 +1,18 @@
+SIVI 1.0.0.0 - PAQUETE SERVIDOR DB - MYSQL 8.4
+===================================================
+Servidor objetivo: vps3536788 / 69.169.109.197
+Motor: MySQL 8.4.10 en Docker
+
+1. Descomprima este paquete, por ejemplo en /opt/sivi-db.
+2. Ejecute como root: bash scripts/prepare_mysql84_db_server.sh
+3. Copie SIVI-DB-MYSQL84-ENVIRONMENT-PRUEBAS.txt a .env y reemplace APP_GIT_COMMIT con el commit real.
+4. Valide: docker compose --env-file .env -f docker-compose-db.yml config
+5. Despliegue: docker compose --env-file .env -f docker-compose-db.yml up -d --build
+6. Espere a que sivi-pruebas-db quede healthy.
+7. Ejecute: DB_CONTAINER_NAME=sivi-pruebas-db bash scripts/validate_mysql84_db_server.sh
+8. Firewall: permita TCP/3306 únicamente desde 69.10.35.41.
+9. Transfiera por SCP /opt/sivi/app-integration/{db_password,db_backup_password,ca.pem} al servidor APP.
+10. NO transfiera mysql_root_password, ca.key ni db-server.key.
+
+No ejecutar docker compose down -v. El volumen db_data contiene la base.
+AUTO_MIGRATE permanece false.

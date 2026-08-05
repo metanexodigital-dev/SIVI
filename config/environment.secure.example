@@ -1,0 +1,47 @@
+# DOCUMENTACIÓN TÉCNICA EN ESPAÑOL
+# Archivo: config/environment.secure.example
+# Propósito: Parámetros complementarios de hardening SOC sin secretos reales.
+APP_VERSION=1.0.0.0
+APP_BUILD_ID=SIVI-1.0.0.0
+APP_RELEASE_CHANNEL=production
+AUTO_MIGRATE=false
+
+# Secretos Docker en el servidor de aplicación
+APP_SETUP_KEY_SECRET_FILE=/opt/sivi/secrets/app_setup_key
+APP_ENCRYPTION_KEY_SECRET_FILE=/opt/sivi/secrets/app_encryption_key
+DB_PASSWORD_SECRET_FILE=/opt/sivi/secrets/db_password
+DB_BACKUP_PASSWORD_SECRET_FILE=/opt/sivi/secrets/db_backup_password
+BACKUP_ENCRYPTION_KEY_SECRET_FILE=/opt/sivi/secrets/backup_encryption_key
+
+# TLS MySQL
+DB_TLS_MODE=verify_ca
+DB_TLS_CA_HOST_PATH=/opt/sivi/pki/ca.pem
+DB_CONNECT_TIMEOUT_SECONDS=8
+
+# Antimalware
+MALWARE_SCAN_REQUIRED=true
+MALWARE_SCAN_TIMEOUT_SECONDS=12
+
+# Respaldos
+BACKUP_ENABLED=true
+BACKUP_CRON_SCHEDULE=0 2 * * *
+BACKUP_TIMEZONE=America/Bogota
+BACKUP_RETENTION_DAYS=30
+BACKUP_ENCRYPTION_ENABLED=true
+BACKUP_PBKDF2_ITERATIONS=600000
+BACKUP_PATH=/var/backups/sivi
+
+# Readiness y sesiones
+READINESS_STORAGE_PATH=/var/www/html/storage
+READINESS_MIN_FREE_MB=2048
+READINESS_REQUIRED_TABLES=users,campaigns,equipment
+COOKIE_SECURE=true
+COOKIE_HTTPONLY=true
+COOKIE_SAMESITE=Lax
+SESSION_IDLE_TIMEOUT_MINUTES=30
+SESSION_WARNING_MINUTES=2
+SESSION_ABSOLUTE_TIMEOUT_HOURS=12
+SESSION_REGENERATE_MINUTES=15
+SECURITY_HEADERS_ENABLED=true
+CSP_REPORT_ONLY=false
+DISPLAY_ERRORS=false

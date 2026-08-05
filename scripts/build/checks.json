@@ -1,0 +1,387 @@
+{
+  "schema": 1,
+  "default_parallelism": 4,
+  "critical": [
+    {
+      "name": "Relanzamiento oficial",
+      "command": [
+        "php",
+        "scripts/check_clean_relaunch_1_0_0_0.php"
+      ]
+    },
+    {
+      "name": "Documentación consolidada",
+      "command": [
+        "php",
+        "scripts/check_documentation_policy_1_0_0_0.php"
+      ]
+    },
+    {
+      "name": "Topología oficial APP/DB",
+      "command": [
+        "php",
+        "scripts/check_split_topology_1_0_0_0.php"
+      ]
+    },
+    {
+      "name": "MySQL 8.4 en topología separada",
+      "command": [
+        "php",
+        "scripts/check_mysql84_split_1_0_0_0.php"
+      ]
+    },
+    {
+      "name": "Mapeo de secretos TLS Docker",
+      "command": [
+        "php",
+        "scripts/check_tls_secret_targets_1_0_0_0.php"
+      ]
+    },
+    {
+      "name": "Infraestructura parametrizable en Dokploy",
+      "command": [
+        "php",
+        "scripts/check_runtime_parameterization_1_0_0_0.php"
+      ]
+    },
+    {
+      "name": "Hardening SOC 1.0.0.0",
+      "command": [
+        "php",
+        "scripts/check_soc_hardening_1_0_0_0.php"
+      ]
+    },
+    {
+      "name": "Experiencia de usuario final 1.0.0.0",
+      "command": [
+        "php",
+        "scripts/check_ux_final_1_0_0_0.php"
+      ]
+    },
+    {
+      "name": "Conflictos de Git",
+      "command": [
+        "sh",
+        "scripts/check_git_conflicts.sh",
+        "."
+      ]
+    },
+    {
+      "name": "Archivos y versión de publicación",
+      "command": [
+        "php",
+        "scripts/check_release_files.php"
+      ]
+    },
+    {
+      "name": "Política de producción",
+      "command": [
+        "php",
+        "scripts/check_production_release.php"
+      ]
+    },
+    {
+      "name": "Archivos obligatorios de ejecución",
+      "command": [
+        "php",
+        "scripts/check_required_files.php"
+      ]
+    },
+    {
+      "name": "Arquitectura de scripts",
+      "command": [
+        "php",
+        "scripts/check_script_architecture_1_0_0_9.php"
+      ]
+    },
+    {
+      "name": "Optimización integral de aplicación",
+      "command": [
+        "php",
+        "scripts/check_application_optimization_1_0_0_10.php"
+      ]
+    },
+    {
+      "name": "Estabilidad estructural",
+      "command": [
+        "php",
+        "scripts/check_system_stability.php"
+      ]
+    },
+    {
+      "name": "Línea base oficial sin migraciones",
+      "command": [
+        "php",
+        "scripts/check_production_baseline.php"
+      ]
+    },
+    {
+      "name": "Esquema limpio compatible con MySQL 8.4",
+      "command": [
+        "php",
+        "scripts/check_clean_database_schema.php"
+      ]
+    },
+    {
+      "name": "Nombres de contenedores y volúmenes",
+      "command": [
+        "php",
+        "scripts/check_container_names.php"
+      ]
+    },
+    {
+      "name": "Formato de contenedores y volúmenes",
+      "command": [
+        "php",
+        "scripts/check_container_name_formats.php"
+      ]
+    },
+    {
+      "name": "Parser robusto de volúmenes",
+      "command": [
+        "php",
+        "scripts/check_volume_parser_1_0_0_11.php"
+      ]
+    },
+    {
+      "name": "Validación de números de contacto",
+      "command": [
+        "php",
+        "scripts/check_contact_phone_validation.php"
+      ]
+    },
+    {
+      "name": "Usuarios y equipos adicionales",
+      "command": [
+        "php",
+        "scripts/check_user_roles_additional_equipment.php"
+      ]
+    },
+    {
+      "name": "Persistencia de equipos adicionales",
+      "command": [
+        "php",
+        "scripts/check_additional_equipment_persistence.php"
+      ]
+    },
+    {
+      "name": "Validación no bloqueante de identidad",
+      "command": [
+        "php",
+        "scripts/check_additional_identity_fallback.php"
+      ]
+    },
+    {
+      "name": "Popup de coincidencia",
+      "command": [
+        "php",
+        "scripts/check_additional_identity_popup.php"
+      ]
+    },
+    {
+      "name": "Tiempo máximo de identidad",
+      "command": [
+        "php",
+        "scripts/check_additional_identity_timeout.php"
+      ]
+    },
+    {
+      "name": "Optimización de rendimiento",
+      "command": [
+        "php",
+        "scripts/check_performance_optimization.php"
+      ]
+    },
+    {
+      "name": "Normalización de seriales de Almacén",
+      "command": [
+        "php",
+        "scripts/check_import_warehouse_serials.php"
+      ]
+    },
+    {
+      "name": "Transacción de Almacén",
+      "command": [
+        "php",
+        "scripts/check_warehouse_transaction.php"
+      ]
+    }
+  ],
+  "advisory": [
+    {
+      "name": "Notificaciones Microsoft Graph",
+      "command": [
+        "php",
+        "scripts/check_microsoft_graph_notifications.php"
+      ]
+    },
+    {
+      "name": "Asociación de sedes GLPI",
+      "command": [
+        "php",
+        "scripts/check_sede_association.php"
+      ]
+    },
+    {
+      "name": "Asociación territorial de Almacén",
+      "command": [
+        "php",
+        "scripts/check_warehouse_sede_association.php"
+      ]
+    },
+    {
+      "name": "Integridad de seriales",
+      "command": [
+        "php",
+        "scripts/check_serial_integrity.php"
+      ]
+    },
+    {
+      "name": "Integridad de equipos adicionales",
+      "command": [
+        "php",
+        "scripts/check_additional_equipment_integrity.php"
+      ]
+    },
+    {
+      "name": "Formulario de equipos adicionales",
+      "command": [
+        "php",
+        "scripts/check_additional_equipment_form.php"
+      ]
+    },
+    {
+      "name": "Puente de escaneo móvil",
+      "command": [
+        "php",
+        "scripts/check_mobile_scan_bridge.php"
+      ]
+    },
+    {
+      "name": "Cámara móvil alternativa",
+      "command": [
+        "php",
+        "scripts/check_mobile_camera_fallback.php"
+      ]
+    },
+    {
+      "name": "Robustez de escaneo móvil",
+      "command": [
+        "php",
+        "scripts/check_mobile_scan_robust.php"
+      ]
+    },
+    {
+      "name": "Consistencia de cierre de sede",
+      "command": [
+        "php",
+        "scripts/check_site_closure_consistency.php"
+      ]
+    },
+    {
+      "name": "Diseño de impresión de reportes",
+      "command": [
+        "php",
+        "scripts/check_print_report_layout.php"
+      ]
+    },
+    {
+      "name": "Centro de reportes",
+      "command": [
+        "php",
+        "scripts/check_reports_center.php"
+      ]
+    },
+    {
+      "name": "PWA y diseño adaptable",
+      "command": [
+        "php",
+        "scripts/check_mobile_pwa_responsive.php"
+      ]
+    },
+    {
+      "name": "Flujo de calidad",
+      "command": [
+        "php",
+        "scripts/check_quality_flow.php"
+      ]
+    },
+    {
+      "name": "Operación de campañas",
+      "command": [
+        "php",
+        "scripts/check_campaign_operation.php"
+      ]
+    },
+    {
+      "name": "Contacto de campañas",
+      "command": [
+        "php",
+        "scripts/check_campaign_contact_flow.php"
+      ]
+    },
+    {
+      "name": "Avance automático de validación",
+      "command": [
+        "php",
+        "scripts/check_validation_auto_next.php"
+      ]
+    },
+    {
+      "name": "Flujo del Registrador",
+      "command": [
+        "php",
+        "scripts/check_registrador_flow.php"
+      ]
+    },
+    {
+      "name": "Flujo del Formador",
+      "command": [
+        "php",
+        "scripts/check_formador_flow.php"
+      ]
+    },
+    {
+      "name": "Experiencia guiada",
+      "command": [
+        "php",
+        "scripts/check_guided_experience.php"
+      ]
+    },
+    {
+      "name": "Integración GLPI",
+      "command": [
+        "php",
+        "scripts/check_glpi_integration.php"
+      ]
+    },
+    {
+      "name": "Control de calidad por sede",
+      "command": [
+        "php",
+        "scripts/check_site_quality_gate.php"
+      ]
+    },
+    {
+      "name": "Interfaz guiada",
+      "command": [
+        "php",
+        "scripts/check_guided_ux.php"
+      ]
+    },
+    {
+      "name": "Cierre seguro",
+      "command": [
+        "php",
+        "scripts/check_secure_closure.php"
+      ]
+    },
+    {
+      "name": "Optimización general",
+      "command": [
+        "php",
+        "scripts/check_optimization.php"
+      ]
+    }
+  ]
+}

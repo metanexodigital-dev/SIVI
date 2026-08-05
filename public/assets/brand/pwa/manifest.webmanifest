@@ -1,0 +1,86 @@
+{
+  "id": "/",
+  "name": "SIVI - Sistema Integrado de Verificación de Inventario",
+  "short_name": "SIVI",
+  "description": "Verificación, captura y seguimiento del inventario tecnológico de la RNEC.",
+  "version": "1.0.0.0",
+  "environment": "production",
+  "start_url": "/index.php",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "any",
+  "background_color": "#FFFFFF",
+  "theme_color": "#0B4EA2",
+  "categories": [
+    "business",
+    "productivity",
+    "utilities"
+  ],
+  "lang": "es-CO",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "assets/brand/pwa/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/brand/pwa/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/brand/pwa/icon-maskable-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "assets/brand/pwa/icon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Validar inventario",
+      "short_name": "Inventario",
+      "url": "/index.php?page=equipos",
+      "icons": [
+        {
+          "src": "assets/brand/pwa/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Equipos adicionales",
+      "short_name": "Adicionales",
+      "url": "/index.php?page=adicionales",
+      "icons": [
+        {
+          "src": "assets/brand/pwa/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Informes",
+      "short_name": "Informes",
+      "url": "/index.php?page=informes",
+      "icons": [
+        {
+          "src": "assets/brand/pwa/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

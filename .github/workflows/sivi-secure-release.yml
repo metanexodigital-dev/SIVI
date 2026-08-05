@@ -1,0 +1,61 @@
+# DOCUMENTACIÓN TÉCNICA EN ESPAÑOL
+# Archivo: .github/workflows/sivi-secure-release.yml
+# Propósito: Define la validación automática del repositorio y del paquete antes de su publicación.
+name: SIVI Secure Release Gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect Git conflict markers
+        run: |
+          ! grep -RInE '^(<<<<<<< .*|=======|>>>>>>> .*)$' . --exclude-dir=.git --exclude-dir=storage
+
+      - name: Reject committed secrets
+        run: |
+          test -z "$(find . -type f \( -name '.env' -o -name '*.pem' -o -name '*.key' -o -name 'id_rsa' -o -name 'id_ed25519' \) -not -path './.git/*' -print)"
+
+      - name: PHP syntax
+        run: |
+          docker run --rm -v "$PWD:/app" -w /app php:8.4-cli sh -lc \
+            'find . -type f -name "*.php" -not -path "./storage/*" -print0 | xargs -0 -n1 php -l'
+
+      - name: Shell syntax
+        run: |
+          find scripts docker -type f -name '*.sh' -print0 | xargs -0 -n1 bash -n
+
+      - name: JSON syntax
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for name in ['RELEASE.json','public/manifest.webmanifest','public/assets/brand/pwa/manifest.webmanifest']:
+              p=Path(name)
+              if p.exists(): json.loads(p.read_text(encoding='utf-8'))
+          PY
+
+      - name: SIVI SOC static gate
+        run: |
+          php scripts/check_soc_hardening_1_0_0_0.php
+          php scripts/build/run.php --json
+
+      - name: Build application image
+        run: docker build --pull -t sivi:${{ github.sha }} .
+
+      - name: Build backup image
+        run: docker build -f docker/backup/Dockerfile -t sivi-backup:${{ github.sha }} .
+
+      - name: Build database image
+        run: docker build -f docker/db/Dockerfile -t sivi-db:${{ github.sha }} .
