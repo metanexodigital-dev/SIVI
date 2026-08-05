@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # SIVI - restricción TCP/3306 para servidor DB con Docker/iptables.
 set -Eeuo pipefail
-APP_IP="${APP_IP:-69.10.35.41}"
+APP_IP="${APP_IP:-162.35.168.149}"
 DB_PORT="${DB_PORT:-3306}"
 
 if ! command -v iptables >/dev/null 2>&1; then
