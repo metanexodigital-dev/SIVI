@@ -17,6 +17,7 @@
 - Se corrigieron los permisos del directorio `/etc/mysql/sivi-tls`: el directorio se crea explícitamente con propietario `mysql:mysql` y modo `0750`, evitando que `umask 077` bloquee la lectura de certificados al proceso MySQL.
 - Se reforzó el `healthcheck` de DB para no marcar el contenedor como saludable si falta el esquema, `app_release_history`, el usuario `sivi_backup`, `require_secure_transport` o el canal TLS `mysql_main`.
 - Se amplió `scripts/validate_mysql84_db_server.sh` para validar versión, base, cantidad de tablas, tablas de control, usuario de respaldo y contexto TLS activo.
+- Se corrigió la lectura del secreto `db_backup_password` durante `/docker-entrypoint-initdb.d`: Docker lo monta como `root:root 0600`, mientras los scripts de inicialización se ejecutan como `mysql`. El wrapper crea una copia efímera en `/run/sivi-secrets/db_backup_password` con propietario `mysql:mysql` y modo `0400`, sin cambiar ni exponer la credencial original.
 
 Este archivo es la fuente oficial y única para documentar cambios, mejoras,
 correcciones y evolución de versiones de **SIVI — Sistema Integrado de
