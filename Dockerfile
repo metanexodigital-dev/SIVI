@@ -21,6 +21,12 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 WORKDIR /var/www/html
 COPY . /var/www/html
 COPY php.ini /usr/local/etc/php/conf.d/sivi.ini
+
+# LAST_VALUE es palabra reservada en MySQL 8.4. La imagen cita el identificador
+# en las dos sentencias específicas del puente móvil para mantener compatibilidad.
+RUN sed -i 's/last_target=?,last_value=?,last_format=?/last_target=?,`last_value`=?,last_format=?/g' src/MobileScanBridge.php \
+    && sed -i 's/last_target,last_value,last_format/last_target,`last_value`,last_format/g' src/MobileScanBridge.php
+
 RUN cp docker/apache-sivi-security-strong.conf /etc/apache2/conf-available/sivi-security-strong.conf \
     && a2enconf sivi-security-strong
 
