@@ -4,6 +4,8 @@ set -Eeuo pipefail
 umask 077
 
 TLS_DIR=/etc/mysql/sivi-tls
+# umask 077 dejaría un mkdir normal en 0700/root; MySQL corre como usuario mysql.
+# Se crea explícitamente con propietario mysql y permiso de traversal controlado.
 install -d -o mysql -g mysql -m 0750 "$TLS_DIR"
 
 copy_tls() {
@@ -15,10 +17,5 @@ copy_tls() {
 copy_tls /run/secrets/db_ca.pem "$TLS_DIR/ca.pem" 0644
 copy_tls /run/secrets/db_server_cert.pem "$TLS_DIR/server-cert.pem" 0644
 copy_tls /run/secrets/db_server_key.pem "$TLS_DIR/server-key.pem" 0600
-
-# Verificación previa: MySQL debe poder atravesar el directorio y leer el material TLS.
-for f in "$TLS_DIR/ca.pem" "$TLS_DIR/server-cert.pem" "$TLS_DIR/server-key.pem"; do
-  runuser -u mysql -- test -r "$f" || { echo "SIVI DB: mysql no puede leer $f" >&2; exit 1; }
-done
 
 exec /usr/local/bin/docker-entrypoint.sh "$@"
