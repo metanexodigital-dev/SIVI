@@ -62,7 +62,11 @@ services:
     healthcheck:
       test:
         - CMD-SHELL
-        - 'CNF=$$(mktemp); chmod 600 $$CNF; printf "[client]\nuser=root\npassword=%s\nprotocol=socket\n" "$$(cat /run/secrets/mysql_root_password)" > $$CNF; mysqladmin --defaults-extra-file=$$CNF ping --silent; rc=$$?; rm -f $$CNF; exit $$rc'
+        - >-
+          CNF=$$(mktemp); chmod 600 $$CNF;
+          printf "[client]\nuser=root\npassword=%s\nprotocol=socket\n" "$$(cat /run/secrets/mysql_root_password)" > $$CNF;
+          READY=$$(mysql --defaults-extra-file=$$CNF -NBe "SELECT IF(EXISTS(SELECT 1 FROM information_schema.tables WHERE table_schema='$${MYSQL_DATABASE}' AND table_name='app_release_history') AND EXISTS(SELECT 1 FROM mysql.user WHERE user='$${SIVI_BACKUP_USER}' AND host='%') AND @@require_secure_transport=1 AND EXISTS(SELECT 1 FROM performance_schema.tls_channel_status WHERE CHANNEL='mysql_main' AND PROPERTY='Enabled' AND LOWER(VALUE)='yes'),1,0);");
+          rc=$$?; rm -f $$CNF; [ $$rc -eq 0 ] && [ "$$READY" = "1" ]
       interval: 10s
       timeout: 10s
       retries: 30
