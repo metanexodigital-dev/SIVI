@@ -13,6 +13,10 @@
 - `AUTO_MIGRATE=false` permanece obligatorio.
 - Se corrigió el mapeo de Docker Secrets TLS para que `ca.pem`, `db-server.crt` y `db-server.key` se monten con los nombres que consumen MySQL y los contenedores APP/backup.
 - Se corrigió `README.md` para que el despliegue documentado coincida con la topología real: `docker-compose.yml` ejecuta únicamente los servicios de aplicación y `docker-compose-db.yml` despliega MySQL 8.4 de forma independiente.
+- Se corrigió la inicialización MySQL 8.4 por uso de `LAST_VALUE`, palabra reservada del motor. La imagen de DB cita el identificador al preparar el esquema de runtime y la imagen APP cita las consultas del puente de captura móvil.
+- Se corrigieron los permisos del directorio `/etc/mysql/sivi-tls`: el directorio se crea explícitamente con propietario `mysql:mysql` y modo `0750`, evitando que `umask 077` bloquee la lectura de certificados al proceso MySQL.
+- Se reforzó el `healthcheck` de DB para no marcar el contenedor como saludable si falta el esquema, `app_release_history`, el usuario `sivi_backup`, `require_secure_transport` o el canal TLS `mysql_main`.
+- Se amplió `scripts/validate_mysql84_db_server.sh` para validar versión, base, cantidad de tablas, tablas de control, usuario de respaldo y contexto TLS activo.
 
 Este archivo es la fuente oficial y única para documentar cambios, mejoras,
 correcciones y evolución de versiones de **SIVI — Sistema Integrado de
