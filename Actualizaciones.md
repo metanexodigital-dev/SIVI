@@ -12,6 +12,7 @@
 - El esquema de instalación para MySQL 8.4 se distribuye como `database/schema.mysql84.sql` y se carga exclusivamente en la primera inicialización del volumen `db_data`.
 - `AUTO_MIGRATE=false` permanece obligatorio.
 - Se corrigió el mapeo de Docker Secrets TLS para que `ca.pem`, `db-server.crt` y `db-server.key` se monten con los nombres que consumen MySQL y los contenedores APP/backup.
+- Se corrigió `README.md` para que el despliegue documentado coincida con la topología real: `docker-compose.yml` ejecuta únicamente los servicios de aplicación y `docker-compose-db.yml` despliega MySQL 8.4 de forma independiente.
 
 Este archivo es la fuente oficial y única para documentar cambios, mejoras,
 correcciones y evolución de versiones de **SIVI — Sistema Integrado de
