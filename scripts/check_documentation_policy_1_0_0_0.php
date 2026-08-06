@@ -39,18 +39,19 @@ $check->add(
 
 $readme = (string)@file_get_contents($root . '/README.md');
 $updates = (string)@file_get_contents($root . '/Actualizaciones.md');
+$version = trim((string)@file_get_contents($root . '/VERSION'));
 
 $check->add(
     'readme_general_documentation',
     str_contains($readme, '`Actualizaciones.md`')
-        && str_contains($readme, '**Versión:** `1.0.0.0`'),
+        && str_contains($readme, '**Versión:** `' . $version . '`'),
     'README.md'
 );
 
 $check->add(
     'updates_single_change_history',
     str_contains($updates, '# Actualizaciones de SIVI')
-        && str_contains($updates, '## 1.0.0.0')
+        && str_contains($updates, '## ' . $version)
         && str_contains($updates, 'No se utilizará `CHANGELOG.md`'),
     'Actualizaciones.md'
 );
