@@ -1,7 +1,7 @@
 # SIVI — Sistema Integrado de Verificación de Inventario
 
-**Versión:** `1.0.0.0`  
-**Build:** `SIVI-1.0.0.0`  
+**Versión:** `Pre-1.0.0.1`  
+**Build:** `SIVI-Pre-1.0.0.1`  
 **Motor de base de datos:** MySQL `8.4.10` LTS  
 **Arquitectura:** aplicación y base de datos en servidores independientes  
 **Migraciones automáticas:** deshabilitadas (`AUTO_MIGRATE=false`)
@@ -101,8 +101,8 @@ Para el entorno actual de pruebas:
 
 ```env
 APP_NAME=SIVI
-APP_VERSION=1.0.0.0
-APP_BUILD_ID=SIVI-1.0.0.0
+APP_VERSION=Pre-1.0.0.1
+APP_BUILD_ID=SIVI-Pre-1.0.0.1
 APP_ENV=testing
 APP_RELEASE_CHANNEL=testing
 APP_GIT_COMMIT=COMMIT_REAL_DE_GITHUB
@@ -139,9 +139,9 @@ Las credenciales reales, `.env`, certificados privados y volúmenes de datos **n
 ## 5. Variables esenciales de Base de Datos
 
 ```env
-APP_VERSION=1.0.0.0
+APP_VERSION=Pre-1.0.0.1
 APP_ENV=testing
-APP_BUILD_ID=SIVI-1.0.0.0
+APP_BUILD_ID=SIVI-Pre-1.0.0.1
 APP_GIT_COMMIT=COMMIT_REAL_DE_GITHUB
 APP_TIMEZONE=America/Bogota
 
@@ -358,7 +358,7 @@ Administra el alcance nacional, campañas, usuarios, importaciones, parámetros,
 
 ## 13. Seguridad
 
-La línea `1.0.0.0` incorpora:
+La línea `Pre-1.0.0.1` incorpora:
 
 - TLS entre APP y MySQL.
 - Secretos fuera del repositorio y de las imágenes.
@@ -399,20 +399,20 @@ El servicio de respaldo utiliza el usuario MySQL independiente `sivi_backup` y c
 
 ## 16. Versionamiento
 
-Formato oficial:
+Durante preproducción se utiliza el formato:
 
 ```text
-N.N.N.N
+Pre-N.N.N.N
 ```
 
-La línea base actual es:
+La versión base de preproducción fue `Pre-1.0.0.0`. El primer cambio controlado es:
 
 ```text
-1.0.0.0
+Pre-1.0.0.1
 ```
 
-Las siguientes correcciones compatibles continuarán como `1.0.0.1`, `1.0.0.2`, etc.
+Los cambios siguientes se incrementarán consecutivamente como `Pre-1.0.0.2`, `Pre-1.0.0.3`, etc. Al aprobar el paso a producción se publicará la primera versión oficial `1.0.0.0`.
 
 `VERSION` es la fuente de versión del código. `APP_GIT_COMMIT` debe contener el hash real del commit desplegado.
 
-El historial oficial se mantiene exclusivamente en `Actualizaciones.md`.
+El historial de cambios se mantiene exclusivamente en `Actualizaciones.md`, inicializado a partir de `Pre-1.0.0.1`.
