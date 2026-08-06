@@ -1,7 +1,7 @@
 # SIVI - Respaldos compatibles con MySQL 8.4.
 FROM mysql:8.4.10
 USER root
-RUN microdnf install -y bash tar gzip openssl tzdata findutils coreutils util-linux cronie \
+RUN microdnf install -y bash tar gzip openssl tzdata findutils util-linux cronie \
     && microdnf clean all
 WORKDIR /opt/sivi
 COPY scripts/backup_dokploy.sh /opt/sivi/backup_dokploy.sh
