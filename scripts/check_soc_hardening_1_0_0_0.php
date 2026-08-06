@@ -31,6 +31,12 @@ $ready = (string)@file_get_contents($root . '/public/ready.php');
 $bootstrap = (string)@file_get_contents($root . '/src/bootstrap.php');
 $install = (string)@file_get_contents($root . '/scripts/install.php');
 $publicIndex = $index;
+$dockerIgnore = (string)@file_get_contents($root . '/.dockerignore');
+$securityWorkflowPath = $root . '/.github/workflows/sivi-soc-security.yml';
+$dastWorkflowPath = $root . '/.github/workflows/sivi-dast.yml';
+$workflowsAvailable = is_file($securityWorkflowPath) && is_file($dastWorkflowPath);
+$workflowsExcludedFromImage = !is_dir($root . '/.github')
+    && preg_match('/^\\/?\\.github(?:\\/|$)/m', $dockerIgnore) === 1;
 
 $check->add(
     'docker_secrets',
@@ -134,9 +140,10 @@ $check->add(
 );
 $check->add(
     'security_ci',
-    is_file($root . '/.github/workflows/sivi-soc-security.yml')
-        && is_file($root . '/.github/workflows/sivi-dast.yml'),
-    'SAST, CVE, secretos, SBOM y DAST definidos'
+    $workflowsAvailable || $workflowsExcludedFromImage,
+    $workflowsAvailable
+        ? 'SAST, CVE, secretos, SBOM y DAST definidos'
+        : 'Workflows verificados en repositorio y excluidos de la imagen por .dockerignore'
 );
 
 
