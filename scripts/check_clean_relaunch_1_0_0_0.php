@@ -16,7 +16,7 @@ $release = json_decode(
     (string)@file_get_contents($root . '/RELEASE.json'),
     true
 );
-$readme = (string)@file_get_contents($root . '/README.md');
+$updates = (string)@file_get_contents($root . '/Actualizaciones.md');
 $compose = (string)@file_get_contents($root . '/docker-compose.yml');
 $dbCompose = (string)@file_get_contents($root . '/docker-compose-db.yml');
 $entrypoint = (string)@file_get_contents($root . '/docker/entrypoint.sh');
@@ -45,8 +45,8 @@ $check->add(
 );
 $check->add(
     'official_history',
-    substr_count($readme, "\n### 1.0.0.") === 1
-        && str_contains($readme, '### 1.0.0.0'),
+    preg_match_all('/^## 1\.0\.0\.\d+\b/m', $updates) === 1
+        && preg_match('/^## 1\.0\.0\.0\b/m', $updates) === 1,
     'Solo 1.0.0.0'
 );
 $check->add(
