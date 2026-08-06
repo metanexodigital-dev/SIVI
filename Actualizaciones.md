@@ -52,3 +52,41 @@ La documentación general del aplicativo permanece en `README.md`.
 - Validación completa de workflows cuando `.github/workflows` está disponible.
 - Validación de exclusión deliberada de `.github` durante el build Docker.
 - Conservación de los controles de hardening SOC.
+
+---
+
+## Pre-1.0.0.2 — Historial dinámico de preproducción
+
+**Fecha:** 6 de agosto de 2026  
+**Build:** `SIVI-Pre-1.0.0.2`  
+**Canal:** `preproduction`  
+**Tipo:** corrección técnica y control de cambios  
+**Versión siguiente:** `Pre-1.0.0.3`
+
+### Cambios
+
+- Se corrigió el bloqueo `official_history` durante la construcción.
+- El verificador obtiene la versión vigente desde `VERSION` y valida su coherencia con `RELEASE.json`.
+- El historial acepta exclusivamente una secuencia continua de preproducción iniciada en `Pre-1.0.0.1`.
+- Se mantiene `1.0.0.0` como línea base futura de producción, sin registrarla como versión ya publicada.
+- La próxima versión se calcula y valida dinámicamente para evitar ajustes manuales del verificador en cada cambio.
+
+### Archivos principales
+
+- `scripts/check_clean_relaunch_1_0_0_0.php`
+- `VERSION`
+- `RELEASE.json`
+- `README.md`
+- `Actualizaciones.md`
+
+### Base de datos
+
+- Sin cambios de estructura.
+- Sin migraciones.
+- `AUTO_MIGRATE=false` se mantiene obligatorio.
+
+### Validaciones
+
+- Secuencia de historial esperada: `Pre-1.0.0.1`, `Pre-1.0.0.2`.
+- Versión siguiente esperada: `Pre-1.0.0.3`.
+- Ausencia de versiones oficiales de producción publicadas durante preproducción.
