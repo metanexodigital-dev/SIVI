@@ -19,7 +19,9 @@ $appEnv = (string)@file_get_contents($root . '/config/environment.example');
 $dbEnv = (string)@file_get_contents(
     $root . '/config/environment.db-server.example'
 );
-$dast = (string)@file_get_contents($root . '/.github/workflows/sivi-dast.yml');
+$dastPath = $root . '/.github/workflows/sivi-dast.yml';
+$dastExists = is_file($dastPath);
+$dast = $dastExists ? (string)file_get_contents($dastPath) : '';
 
 $check->add(
     'app_host_required',
@@ -68,9 +70,16 @@ $check->add(
 );
 $check->add(
     'dast_target_is_runtime_input',
-    str_contains($dast, 'target_url:')
-        && !str_contains($dast, 'sivi.registraduria.gov.co'),
-    'URL ingresada al ejecutar workflow'
+    !$dastExists || (
+        str_contains($dast, 'workflow_dispatch:')
+        && str_contains($dast, 'inputs:')
+        && str_contains($dast, 'target_url:')
+        && str_contains($dast, '${{ inputs.target_url }}')
+        && !str_contains($dast, 'sivi.registraduria.gov.co')
+    ),
+    $dastExists
+        ? 'URL ingresada al ejecutar workflow'
+        : 'Workflow excluido deliberadamente de la imagen por .dockerignore'
 );
 
 $fixedValues = [
