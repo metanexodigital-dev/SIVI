@@ -43,7 +43,7 @@ $updates = (string)@file_get_contents($root . '/Actualizaciones.md');
 $check->add(
     'readme_general_documentation',
     str_contains($readme, '`Actualizaciones.md`')
-        && str_contains($readme, '**Versión actual:** `1.0.0.0`'),
+        && str_contains($readme, '**Versión:** `1.0.0.0`'),
     'README.md'
 );
 
