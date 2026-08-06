@@ -15,6 +15,25 @@ La documentación general del aplicativo permanece en `README.md`.
 
 ---
 
+## Pre-1.0.0.3 — Documentación dinámica de versión
+
+**Fecha:** 6 de agosto de 2026
+**Build:** `SIVI-Pre-1.0.0.3`
+**Canal:** `preproduction`
+**Tipo:** corrección técnica y documentación
+**Versión siguiente:** `Pre-1.0.0.4`
+
+### Cambios
+
+- Se sincronizó la identificación visible de `README.md` con la versión activa
+  y el build `SIVI-Pre-1.0.0.3`.
+- `readme_general_documentation` valida dinámicamente la versión leída desde
+  `VERSION` y rechaza identificadores de preproducción con formato inválido.
+- Se integra el cambio pendiente `Pre-1.0.0.2`, correspondiente al historial
+  dinámico de preproducción.
+- Se conserva `1.0.0.0` como línea base futura de producción.
+- No incluye cambios de base de datos, migraciones ni alcance funcional.
+
 ## Pre-1.0.0.1 — Corrección del control security_ci
 
 **Fecha:** 6 de agosto de 2026  
