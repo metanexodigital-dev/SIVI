@@ -28,7 +28,7 @@ services:
 
   app:
     container_name: ${APP_CONTAINER_NAME:-sivi-produccion-app}
-    image: sivi-app:${APP_VERSION:-1.0.0.0}
+    image: sivi-app:${APP_VERSION:-Pre-1.0.0.4}
     build:
       context: .
       dockerfile: Dockerfile
@@ -46,8 +46,8 @@ services:
       DB_SERVER_HOSTNAME: ${DB_SERVER_HOSTNAME:?Configure DB_SERVER_HOSTNAME}
       APP_INTERNAL_DNS: ${APP_INTERNAL_DNS:?Configure APP_INTERNAL_DNS}
       APP_NAME: ${APP_NAME:-SIVI}
-      APP_VERSION: ${APP_VERSION:-1.0.0.0}
-      APP_ENV: ${APP_ENV:-production}
+      APP_VERSION: ${APP_VERSION:-Pre-1.0.0.4}
+      APP_ENV: ${APP_ENV:-preproduction}
       APP_URL: ${APP_URL:?Configure APP_URL}
       APP_TIMEZONE: ${APP_TIMEZONE:-America/Bogota}
       APP_SETUP_KEY_FILE: /run/secrets/app_setup_key
@@ -55,10 +55,10 @@ services:
       APP_SESSION_NAME: ${APP_SESSION_NAME:-sivi_production_session}
       APP_TRUST_PROXY_HEADERS: ${APP_TRUST_PROXY_HEADERS:-true}
       APP_TRUSTED_PROXY_IPS: ${APP_TRUSTED_PROXY_IPS:-127.0.0.1/32,::1/128,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
-      APP_BUILD_ID: ${APP_BUILD_ID:-SIVI-1.0.0.0}
+      APP_BUILD_ID: ${APP_BUILD_ID:-SIVI-Pre-1.0.0.4}
       APP_GIT_COMMIT: ${APP_GIT_COMMIT:-}
       APP_ENCRYPTION_KEY_FILE: /run/secrets/app_encryption_key
-      APP_RELEASE_CHANNEL: ${APP_RELEASE_CHANNEL:-production}
+      APP_RELEASE_CHANNEL: ${APP_RELEASE_CHANNEL:-preproduction}
       PLATE_RNEC_TOTAL_CHARACTERS: ${PLATE_RNEC_TOTAL_CHARACTERS:-9}
       ONBOARDING_ENABLED: ${ONBOARDING_ENABLED:-true}
       ONBOARDING_TOUR_KEY: ${ONBOARDING_TOUR_KEY:-sivi-first-login-v1}
@@ -132,7 +132,7 @@ services:
 
   notifications:
     container_name: ${NOTIFICATIONS_CONTAINER_NAME:-sivi-produccion-notificaciones}
-    image: sivi-app:${APP_VERSION:-1.0.0.0}
+    image: sivi-app:${APP_VERSION:-Pre-1.0.0.4}
     restart: unless-stopped
     init: true
     user: "www-data"
@@ -144,9 +144,9 @@ services:
       APP_SERVER_HOSTNAME: ${APP_SERVER_HOSTNAME:?Configure APP_SERVER_HOSTNAME}
       DB_SERVER_HOSTNAME: ${DB_SERVER_HOSTNAME:?Configure DB_SERVER_HOSTNAME}
       APP_NAME: ${APP_NAME:-SIVI}
-      APP_VERSION: ${APP_VERSION:-1.0.0.0}
+      APP_VERSION: ${APP_VERSION:-Pre-1.0.0.4}
       APP_ENV: ${APP_ENV:-production}
-      APP_BUILD_ID: ${APP_BUILD_ID:-SIVI-1.0.0.0}
+      APP_BUILD_ID: ${APP_BUILD_ID:-SIVI-Pre-1.0.0.4}
       APP_URL: ${APP_URL:?Configure APP_URL}
       APP_TIMEZONE: ${APP_TIMEZONE:-America/Bogota}
       APP_ENCRYPTION_KEY_FILE: /run/secrets/app_encryption_key
@@ -204,8 +204,8 @@ services:
       DB_CHARSET: ${DB_CHARSET:-utf8mb4}
       DB_TLS_MODE: ${DB_TLS_MODE:-verify_ca}
       DB_TLS_CA: /run/secrets/db_ca.pem
-      APP_VERSION: ${APP_VERSION:-1.0.0.0}
-      APP_BUILD_ID: ${APP_BUILD_ID:-SIVI-1.0.0.0}
+      APP_VERSION: ${APP_VERSION:-Pre-1.0.0.4}
+      APP_BUILD_ID: ${APP_BUILD_ID:-SIVI-Pre-1.0.0.4}
       APP_GIT_COMMIT: ${APP_GIT_COMMIT:-}
       BACKUP_ENABLED: ${BACKUP_ENABLED:-true}
       BACKUP_CRON_SCHEDULE: "${BACKUP_CRON_SCHEDULE:-0 2 * * *}"

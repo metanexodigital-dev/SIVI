@@ -13,15 +13,18 @@ $entrypoint = (string)@file_get_contents($root . '/docker/entrypoint.sh');
 $dbDockerfile = (string)@file_get_contents($root . '/docker/db/Dockerfile');
 $dbInit = (string)@file_get_contents($root . '/docker/db/99-sivi-register-release.sh');
 $release = (string)@file_get_contents($root . '/RELEASE.json');
+$releaseData = json_decode($release, true);
 $version = trim((string)@file_get_contents($root . '/VERSION'));
+$validReleaseVersion = preg_match('/^(?:Pre-)?\d+\.\d+\.\d+\.\d+$/', $version) === 1;
 
 $checks = [
-    'version' => $version === '1.0.0.0',
-    'official_build' => str_contains($release, '"build_id": "SIVI-1.0.0.0"'),
+    'version' => $validReleaseVersion,
+    'release_build' => str_contains($release, '"build_id": "SIVI-' . $version . '"'),
+    'official_baseline' => ($releaseData['production_baseline'] ?? '') === '1.0.0.0',
     'release_no_migrations' => str_contains($release, '"automatic_migrations": false')
         && str_contains($release, '"database_migration_required": false'),
     'custom_database_image' => str_contains($dbCompose, 'dockerfile: docker/db/Dockerfile')
-        && str_contains($dbCompose, 'image: sivi-mysql84:${APP_VERSION:-1.0.0.0}'),
+        && str_contains($dbCompose, 'image: sivi-mysql84:${APP_VERSION:-' . $version . '}'),
     'app_forces_auto_migrate_false' => substr_count($compose, 'AUTO_MIGRATE: "false"') >= 2,
     'entrypoint_does_not_call_migrate' => !str_contains($entrypoint, 'scripts/migrate.php'),
     'schema_copied_to_mysql_init' => str_contains($dbDockerfile, '01-sivi-schema.sql'),

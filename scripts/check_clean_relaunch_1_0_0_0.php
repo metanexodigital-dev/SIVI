@@ -22,10 +22,26 @@ $dbCompose = (string)@file_get_contents($root . '/docker-compose-db.yml');
 $entrypoint = (string)@file_get_contents($root . '/docker/entrypoint.sh');
 $dbDockerfile = (string)@file_get_contents($root . '/docker/db/Dockerfile');
 
-$check->add('version', $version === 'Pre-1.0.0.1', $version);
+$isPreproductionVersion = preg_match('/^Pre-1\\.0\\.0\\.([1-9]\\d*)$/', $version, $versionMatch) === 1;
+$patch = $isPreproductionVersion ? (int)$versionMatch[1] : 0;
+$expectedNextVersion = $isPreproductionVersion
+    ? 'Pre-1.0.0.' . ($patch + 1)
+    : '';
+
+preg_match_all('/^## Pre-1\\.0\\.0\\.([1-9]\\d*)\\b/m', $updates, $historyMatches);
+$historyPatches = array_map('intval', $historyMatches[1] ?? []);
+sort($historyPatches, SORT_NUMERIC);
+$expectedHistoryPatches = $patch > 0 ? range(1, $patch) : [];
+
+$check->add('version', $isPreproductionVersion, $version);
+$check->add(
+    'release_version',
+    (string)($release['version'] ?? '') === $version,
+    (string)($release['version'] ?? '')
+);
 $check->add(
     'build_id',
-    (string)($release['build_id'] ?? '') === 'SIVI-Pre-1.0.0.1',
+    (string)($release['build_id'] ?? '') === 'SIVI-' . $version,
     (string)($release['build_id'] ?? '')
 );
 $check->add(
@@ -42,14 +58,17 @@ $check->add(
 );
 $check->add(
     'next_version',
-    (string)($release['next_version'] ?? '') === 'Pre-1.0.0.2',
+    (string)($release['next_version'] ?? '') === $expectedNextVersion,
     (string)($release['next_version'] ?? '')
 );
 $check->add(
     'official_history',
-    preg_match_all('/^## 1\.0\.0\.\d+\b/m', $updates) === 1
-        && preg_match('/^## 1\.0\.0\.0\b/m', $updates) === 1,
-    'Solo 1.0.0.0'
+    ($release['stage'] ?? '') === 'preproduction'
+        && $historyPatches === $expectedHistoryPatches
+        && preg_match('/^## 1\\.0\\.0\\.\\d+\\b/m', $updates) !== 1,
+    $historyPatches === []
+        ? 'Sin versiones de preproducción'
+        : 'Pre-1.0.0.' . implode(', Pre-1.0.0.', $historyPatches)
 );
 $check->add(
     'db_host_parameterized',

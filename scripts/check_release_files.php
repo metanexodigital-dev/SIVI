@@ -52,10 +52,10 @@ function readJsonFile(string $path): ?array
 }
 
 $version = trim((string)@file_get_contents($root . '/VERSION'));
-$validFormat = preg_match('/^\d+\.\d+\.\d+\.\d+$/', $version) === 1;
+$validFormat = preg_match('/^(?:Pre-)?\d+\.\d+\.\d+\.\d+$/', $version) === 1;
 $checks['version_format'] = $validFormat;
 if (!$validFormat) {
-    $errors[] = 'VERSION no tiene el formato N.N.N.N.';
+    $errors[] = 'VERSION no tiene el formato N.N.N.N o Pre-N.N.N.N.';
 }
 
 $release = readJsonFile($root . '/RELEASE.json');
@@ -174,8 +174,12 @@ if (!$historyRemovedOk) {
 }
 
 $stage = strtolower((string)($release['stage'] ?? ''));
-$major = $validFormat ? (int)explode('.', $version)[0] : -1;
+$numericVersion = str_starts_with($version, 'Pre-') ? substr($version, 4) : $version;
+$major = $validFormat ? (int)explode('.', $numericVersion)[0] : -1;
 $policyOk = !($stage === 'production' && $major < 1);
+$policyOk = $policyOk
+    && !($stage === 'production' && str_starts_with($version, 'Pre-'))
+    && !($stage === 'preproduction' && !str_starts_with($version, 'Pre-'));
 $checks['stage_policy'] = $policyOk;
 if (!$policyOk) {
     $errors[] = 'Una versión 0.x no puede marcarse como producción.';

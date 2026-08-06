@@ -2,7 +2,7 @@
 services:
   db:
     container_name: ${DB_CONTAINER_NAME:-sivi-produccion-db}
-    image: sivi-mysql84:${APP_VERSION:-1.0.0.0}
+    image: sivi-mysql84:${APP_VERSION:-Pre-1.0.0.4}
     build:
       context: .
       dockerfile: docker/db/Dockerfile
@@ -30,7 +30,7 @@ services:
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
       SIVI_BACKUP_USER: ${DB_BACKUP_USERNAME:-sivi_backup}
       SIVI_BACKUP_PASSWORD_FILE: /run/secrets/db_backup_password
-      APP_VERSION: ${APP_VERSION:-1.0.0.0}
+      APP_VERSION: ${APP_VERSION:-Pre-1.0.0.4}
       APP_ENV: ${APP_ENV:-production}
       APP_BUILD_ID: ${APP_BUILD_ID:-SIVI-1.0.0.0}
       APP_GIT_COMMIT: ${APP_GIT_COMMIT:-}

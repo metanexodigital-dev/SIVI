@@ -1,9 +1,9 @@
 # DOCUMENTACIÓN TÉCNICA EN ESPAÑOL
 # Archivo: config/environment.secure.example
 # Propósito: Parámetros complementarios de hardening SOC sin secretos reales.
-APP_VERSION=1.0.0.0
-APP_BUILD_ID=SIVI-1.0.0.0
-APP_RELEASE_CHANNEL=production
+APP_VERSION=Pre-1.0.0.4
+APP_BUILD_ID=SIVI-Pre-1.0.0.4
+APP_RELEASE_CHANNEL=preproduction
 AUTO_MIGRATE=false
 
 # Secretos Docker en el servidor de aplicación
