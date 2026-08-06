@@ -22,10 +22,10 @@ $dbCompose = (string)@file_get_contents($root . '/docker-compose-db.yml');
 $entrypoint = (string)@file_get_contents($root . '/docker/entrypoint.sh');
 $dbDockerfile = (string)@file_get_contents($root . '/docker/db/Dockerfile');
 
-$check->add('version', $version === '1.0.0.0', $version);
+$check->add('version', $version === 'Pre-1.0.0.1', $version);
 $check->add(
     'build_id',
-    (string)($release['build_id'] ?? '') === 'SIVI-1.0.0.0',
+    (string)($release['build_id'] ?? '') === 'SIVI-Pre-1.0.0.1',
     (string)($release['build_id'] ?? '')
 );
 $check->add(
@@ -35,12 +35,14 @@ $check->add(
 );
 $check->add(
     'fresh_install',
-    !empty($release['fresh_install']) && !empty($release['clean_relaunch']),
-    'Servidor nuevo'
+    ($release['stage'] ?? '') === 'preproduction'
+        && empty($release['fresh_install'])
+        && empty($release['clean_relaunch']),
+    'Actualización controlada de preproducción'
 );
 $check->add(
     'next_version',
-    (string)($release['next_version'] ?? '') === '1.0.0.1',
+    (string)($release['next_version'] ?? '') === 'Pre-1.0.0.2',
     (string)($release['next_version'] ?? '')
 );
 $check->add(
