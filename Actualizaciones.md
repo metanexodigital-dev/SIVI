@@ -12,7 +12,6 @@ La documentación general del aplicativo permanece en `README.md`.
 - Cada cambio debe actualizar `VERSION`, `RELEASE.json`, la versión visible,
   este archivo y el commit correspondiente.
 - No se utilizará `CHANGELOG.md`.
-
 ---
 
 ## Pre-1.0.0.4 — Paquete funcional coherente para preproducción
