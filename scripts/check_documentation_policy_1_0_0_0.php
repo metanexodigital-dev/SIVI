@@ -40,12 +40,14 @@ $check->add(
 $readme = (string)@file_get_contents($root . '/README.md');
 $updates = (string)@file_get_contents($root . '/Actualizaciones.md');
 $version = trim((string)@file_get_contents($root . '/VERSION'));
+$validVersion = preg_match('/^Pre-1\\.0\\.0\\.[1-9]\\d*$/', $version) === 1;
 
 $check->add(
     'readme_general_documentation',
-    str_contains($readme, '`Actualizaciones.md`')
+    $validVersion
+        && str_contains($readme, '`Actualizaciones.md`')
         && str_contains($readme, '**Versión:** `' . $version . '`'),
-    'README.md'
+    'README.md / ' . ($version !== '' ? $version : 'VERSION ausente')
 );
 
 $check->add(
