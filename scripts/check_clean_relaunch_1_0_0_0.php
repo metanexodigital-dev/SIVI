@@ -30,6 +30,7 @@ $expectedNextVersion = $isPreproductionVersion
 
 preg_match_all('/^## Pre-1\\.0\\.0\\.([1-9]\\d*)\\b/m', $updates, $historyMatches);
 $historyPatches = array_map('intval', $historyMatches[1] ?? []);
+sort($historyPatches, SORT_NUMERIC);
 $expectedHistoryPatches = $patch > 0 ? range(1, $patch) : [];
 
 $check->add('version', $isPreproductionVersion, $version);
