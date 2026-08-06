@@ -1,6 +1,6 @@
 # SIVI — Sistema Integrado de Verificación de Inventario
 
-**Versión actual:** `Pre-1.0.0.4`
+**Versión:** `Pre-1.0.0.4`
 **Build:** `SIVI-Pre-1.0.0.4`
 **Canal:** preproducción
 **Motor de base de datos:** MySQL `8.4.10` LTS  
